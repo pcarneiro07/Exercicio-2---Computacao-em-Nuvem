@@ -1,0 +1,44 @@
+name: Gerar Slides PDF
+
+on:
+  push:
+    paths:
+      - "docs/*.md"
+      - "docs/pandoc.yaml"
+      - ".github/workflows/slides.yml"
+
+jobs:
+  build-slides:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar Pandoc + LaTeX mínimo
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc \
+            texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended \
+            fonts-lmodern
+
+      - name: Converter Markdown -> PDF (Beamer)
+        run: |
+          mkdir -p slides
+          shopt -s nullglob
+          for f in docs/*.md; do
+            base=$(basename "$f" .md)
+            if [ -f docs/pandoc.yaml ]; then
+              pandoc "$f" -d docs/pandoc.yaml -o "slides/${base}.pdf"
+            else
+              pandoc "$f" -t beamer --pdf-engine=xelatex -o "slides/${base}.pdf"
+            fi
+          done
+          ls -lh slides
+
+      - name: Publicar Artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: slides-pdf
+          path: slides/*.pdf
+          if-no-files-found: error
