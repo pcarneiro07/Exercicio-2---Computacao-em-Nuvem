@@ -1,11 +1,12 @@
-% Introdução à Automação
-% Pedro Carneiro
-% 2025-10-24
+# Introdução à Automação
 
-# O que é CI/CD?
+## O que é CI/CD?
 - Integração Contínua
 - Entrega Contínua
 
-# Por que usar GitHub Actions?
+## Por que usar GitHub Actions?
 - Automatização
 - Reprodutibilidade
+
+## Slide de teste
+- Testando workflow
